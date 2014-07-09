@@ -121,4 +121,17 @@ class Chapter5Tests extends FunSuite {
     assert(!Stream(1,2,3).startsWith(Stream(1,5)))
     assert(!Stream(1,2,3).startsWith(Stream(2,3)))
   }
+
+  test("drop") {
+    assert(Stream(1,2,3).drop(2).toList == Stream(3).toList)
+    assert(Stream(1,2,3).drop(5).toList == Stream().toList)
+    assert(Stream().drop(2).toList == Stream().toList)
+    assert(Stream(1).drop(0).toList == Stream(1).toList)
+  }
+
+  test("tails") {
+    println(Stream(1,2,3).tails.toList)
+    println(Stream(1,2,3).tails.toList.map(_.toList))
+    assert(Stream(1,2,3).tails.toList.map(_.toList) == List(List(1,2,3),List(2,3),List(3),List()))
+  }
 }

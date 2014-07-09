@@ -109,13 +109,23 @@ trait Stream[+A] {
       }
     })
   }
-//
-//  def tails: Stream[Stream[A]] = {
-//    Stream.unfold(this)({
-//      case Stream() => None
-//      case s => Some((s, s drop 1))
-//    })
-//  }
+
+  def tails: Stream[Stream[A]] = {
+    Stream.unfold(this)(s => {
+      if (s.isEmpty) None
+      else Some((s, s.drop(1)))
+    }).append(Stream(Stream()))
+  }
+
+  def drop(n: Int): Stream[A] = uncons match {
+    case None => Stream()
+    case Some((h,t)) => {
+      n match {
+        case 0 => this
+        case _ => t.drop(n - 1)
+      }
+    }
+  }
 }
 
 object Stream {
