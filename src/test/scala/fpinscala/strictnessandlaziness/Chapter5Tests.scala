@@ -100,16 +100,25 @@ class Chapter5Tests extends FunSuite {
   }
 
   test("zip") {
-    assert(Stream.zip(Stream(1,2,3), Stream(4,5,6)).toList == List((1,4), (2,5), (3,6)))
-    assert(Stream.zip(Stream(1,2,3,4), Stream(4,5,6)).toList == List((1,4), (2,5), (3,6)))
+    assert(Stream(1,2,3).zip(Stream(4,5,6)).toList == List((1,4), (2,5), (3,6)))
+    assert(Stream(1,2,3,4).zip(Stream(4,5,6)).toList == List((1,4), (2,5), (3,6)))
     println("expect 3 calls")
-    assert(Stream.zip(Stream(1,2,3), Stream(4,5,6,7)).toList == List((1,4), (2,5), (3,6)))
+    assert(Stream(1,2,3).zip(Stream(4,5,6,7)).toList == List((1,4), (2,5), (3,6)))
+  }
+
+  test("zipAll") {
+    assert(Stream(1,2,3).zipAll(Stream(4,5,6), Nil, Nil).toList == List((1,4), (2,5), (3,6)))
+    assert(Stream(1,2,3,4).zipAll(Stream(4,5,6), Nil, Nil).toList == List((1,4), (2,5), (3,6), (4,Nil)))
+    println("expect 3 calls")
+    assert(Stream(1,2,3).zipAll(Stream(4,5,6,7), Nil, Nil).toList == List((1,4), (2,5), (3,6), (Nil,7)))
   }
 
   test("startsWith") {
-    assert(Stream.startsWith(Stream(1,2,3), Stream(1,2)))
-    assert(Stream.startsWith(Stream(1,2), Stream(1,2)))
-    assert(Stream.startsWith(Stream(1), Stream(1,2)))
-    assert(!Stream.startsWith(Stream(1,2,3), Stream(1,5)))
+    println(Stream(1,2,3).zipAll(Stream(2,3), None, None).toList)
+    assert(Stream(1,2,3).startsWith(Stream(1,2)))
+    assert(Stream(1,2).startsWith(Stream(1,2)))
+    assert(!Stream(1).startsWith(Stream(1,2)))
+    assert(!Stream(1,2,3).startsWith(Stream(1,5)))
+    assert(!Stream(1,2,3).startsWith(Stream(2,3)))
   }
 }

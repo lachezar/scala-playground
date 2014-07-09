@@ -84,6 +84,38 @@ trait Stream[+A] {
     })
   }
 
+  def zip[B >: A](s2: Stream[B]): Stream[(B,B)] = {
+    (this.uncons, s2.uncons) match {
+      case (Some((h,t)), Some((h2,t2))) => Stream.cons((h,h2), t.zip(t2))
+      case _ => Stream()
+    }
+  }
+
+  def zipAll[B, C >: A, D >: B](that : Stream[B], thisElem : C, thatElem : D) : Stream[(C, D)] = {
+    (this.uncons, that.uncons) match {
+      case (Some((h,t)), Some((h2,t2))) => Stream.cons((h,h2), t.zipAll(t2, thisElem, thatElem))
+      case (Some((h,t)), None) => Stream.cons((h,thatElem), t.zipAll(Stream(), thisElem, thatElem))
+      case (None, Some((h2,t2))) => Stream.cons((thisElem,h2), Stream().zipAll(t2, thisElem, thatElem))
+      case _ => Stream()
+    }
+  }
+
+  def startsWith[B >: A](s: Stream[B]): Boolean = {
+    this.zipAll(s, None, None).forAll({
+      _ match {
+        case (_, None) => true
+        case (None, b) => false
+        case (a, b) => a == b
+      }
+    })
+  }
+//
+//  def tails: Stream[Stream[A]] = {
+//    Stream.unfold(this)({
+//      case Stream() => None
+//      case s => Some((s, s drop 1))
+//    })
+//  }
 }
 
 object Stream {
@@ -128,30 +160,13 @@ object Stream {
 
   def fib2: Stream[Int] = cons(0, unfold((0,1))(x => Some((x._2, (x._2, x._1 + x._2)))))
 
-  //zip takeWhile
-
-  def zip[A](s: Stream[A], s2: Stream[A]): Stream[(A,A)] = {
-    s.uncons match {
-      case None => Stream()
-      case Some((h,t)) => s2.uncons match {
-        case None => Stream()
-        case Some((h2,t2)) => {
-          println("called")
-          cons((h,h2), zip(t,t2))
-        }
-      }
-    }
-  }
 
   // TODO: define zipAll
 
-  def startsWith[A](s: Stream[A], s2: Stream[A]): Boolean = {
-    zip(s,s2).forAll({
-      _ match {
-        case (a, b) => a == b
-      }
-    })
-  }
 
   // TODO: def tails: Stream[Stream[A]]
+
+
+
+  //def hasSubsequence[A](s1: Stream[A], s2: Stream[A]): Boolean = s1.tails exists (startsWith(_,s2))
 }
