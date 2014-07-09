@@ -170,13 +170,5 @@ object Stream {
 
   def fib2: Stream[Int] = cons(0, unfold((0,1))(x => Some((x._2, (x._2, x._1 + x._2)))))
 
-
-  // TODO: define zipAll
-
-
-  // TODO: def tails: Stream[Stream[A]]
-
-
-
-  //def hasSubsequence[A](s1: Stream[A], s2: Stream[A]): Boolean = s1.tails exists (startsWith(_,s2))
+  def hasSubsequence[A](s1: Stream[A], s2: Stream[A]): Boolean = s1.tails.exists(_.startsWith(s2))
 }

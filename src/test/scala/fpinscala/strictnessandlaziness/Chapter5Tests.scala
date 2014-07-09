@@ -134,4 +134,13 @@ class Chapter5Tests extends FunSuite {
     println(Stream(1,2,3).tails.toList.map(_.toList))
     assert(Stream(1,2,3).tails.toList.map(_.toList) == List(List(1,2,3),List(2,3),List(3),List()))
   }
+
+  test("hasSubsequence") {
+    assert(Stream.hasSubsequence(Stream(1,2,3,4), Stream(2,3)))
+    assert(!Stream.hasSubsequence(Stream(1,2,3,4), Stream(1,5)))
+    assert(Stream.hasSubsequence(Stream(1,2,3,4), Stream(1)))
+    assert(Stream.hasSubsequence(Stream(1,2,3,4), Stream()))
+    assert(!Stream.hasSubsequence(Stream(1,2,3,4), Stream(1,2,3,4,5)))
+    assert(Stream.hasSubsequence(Stream(1,2,3,4), Stream(1,2,3,4)))
+  }
 }
